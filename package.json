@@ -1,0 +1,35 @@
+{
+  "name": "webpack-config",
+  "version": "1.0.0",
+  "author": "Blu",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc --declaration",
+    "dev": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@module-federation/enhanced": "^0.16.0",
+    "@types/node": "^24.3.0",
+    "html-webpack-plugin": "^5.5.3",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.8.4",
+    "webpack": "^5.88.2",
+    "webpack-merge": "^5.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pagnet/webpack-config.git"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "tsup": "^8.5.0"
+  }
+}
