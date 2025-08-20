@@ -34,10 +34,4 @@ jobs:
         run: |
           npm whoami
 
-          OLD_PACKAGE_VERSION=$(git show HEAD~1:package.json | jq -r '.version')
-          NEW_PACKAGE_VERSION=$(git show HEAD:package.json | jq -r '.version')
-
-          if [ "$NEW_PACKAGE_VERSION" != "$OLD_PACKAGE_VERSION" ]; then
-            echo "Version changed to $NEW_PACKAGE_VERSION. Publishing..."
-            npm publish --access public
-          fi
+          npm publish --access public

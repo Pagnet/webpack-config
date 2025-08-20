@@ -1,5 +1,5 @@
 {
-  "name": "webpack-config",
+  "name": "@useblu/webpack-config",
   "version": "1.0.2",
   "author": "Blu",
   "license": "MIT",
