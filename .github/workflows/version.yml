@@ -1,0 +1,38 @@
+name: 'Bump Version'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Get current version
+        id: current_version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
+      - name: Bump version
+        id: new_version
+        run: |
+          npm version patch --no-git-tag-version
+          echo "NEW_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+      
+      - name: Commit and push new version
+        run: |
+          git config --global user.name "opsblu"
+          git config --global user.email "ops@useblu.com.br"
+          git add package.json
+          git commit -m "Bump version to ${{ env.NEW_VERSION }}"
+          git push
