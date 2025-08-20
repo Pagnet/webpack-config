@@ -32,7 +32,7 @@ const devConfig = ({ port, exposes, remotes, name, envs }: DevConfigProps) => ({
     new DefinePlugin({
       'process.env': JSON.stringify(envs),
     }),
-    moduleFederation({ name, exposes, remotes }),
+    moduleFederation({ name, exposes, remotes, dev: true }),
   ],
 });
 
