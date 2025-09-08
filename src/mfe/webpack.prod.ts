@@ -1,18 +1,17 @@
 import { merge } from 'webpack-merge';
 import { DefinePlugin } from 'webpack';
 import commonConfig from './webpack.common';
-import moduleFederation from './module-federation';
+import { ModuleFederationPlugin } from '@module-federation/enhanced'
 
 interface ProdConfigProps {
-  exposes: Record<string, string>;
-  remotes: Record<string, string>;
+  moduleFederation: InstanceType<typeof ModuleFederationPlugin>;
   name: string;
   publicPath: string;
   envs: Record<string, string>;
   alias?: Record<string, string>;
 }
 
-const prodConfig = ({ exposes, remotes, name, publicPath, envs }: ProdConfigProps) => ({
+const prodConfig = ({ moduleFederation, publicPath, envs }: ProdConfigProps) => ({
   mode: 'production',
   output: {
     filename: '[name].[contenthash].js',
@@ -22,12 +21,12 @@ const prodConfig = ({ exposes, remotes, name, publicPath, envs }: ProdConfigProp
     new DefinePlugin({
       'process.env': JSON.stringify(envs),
     }),
-    moduleFederation({ name, exposes, remotes }),
+    moduleFederation,
   ],
 });
 
-export default ({ exposes, remotes, name, alias, publicPath, envs }: ProdConfigProps) => 
+export default ({ moduleFederation, name, alias, publicPath, envs }: ProdConfigProps) => 
   merge(
     commonConfig({ alias, name }) as any,
-    prodConfig({ exposes, remotes, name, publicPath, envs }) as any
+    prodConfig({ moduleFederation, name, publicPath, envs }) as any
   );

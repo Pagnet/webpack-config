@@ -1,18 +1,16 @@
 import { merge } from 'webpack-merge';
 import { DefinePlugin } from 'webpack';
-import moduleFederation from './module-federation';
 import commonConfig from './webpack.common';
 
 interface DevConfigProps {
   port: number;
-  exposes: Record<string, string>;
-  remotes: Record<string, string>;
+  moduleFederation: any;
   name: string;
   envs: Record<string, string>;
   alias?: Record<string, string>;
 }
 
-const devConfig = ({ port, exposes, remotes, name, envs }: DevConfigProps) => ({
+const devConfig = ({ port, moduleFederation, envs }: DevConfigProps) => ({
   mode: 'development',
 
   output: {
@@ -32,12 +30,12 @@ const devConfig = ({ port, exposes, remotes, name, envs }: DevConfigProps) => ({
     new DefinePlugin({
       'process.env': JSON.stringify(envs),
     }),
-    moduleFederation({ name, exposes, remotes, dev: true }),
+    moduleFederation,
   ],
 });
 
-export default ({ port, exposes, remotes, name, alias, envs }: DevConfigProps) => 
+export default ({ port, moduleFederation, name, alias, envs }: DevConfigProps) => 
   merge(
     commonConfig({ alias, name }) as any,
-    devConfig({ port, exposes, remotes, name, envs }) as any
+    devConfig({ port, moduleFederation, name, envs }) as any
   )
