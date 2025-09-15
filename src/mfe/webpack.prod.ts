@@ -1,7 +1,8 @@
 import { merge } from 'webpack-merge';
 import { DefinePlugin } from 'webpack';
-import commonConfig from './webpack.common';
 import { ModuleFederationPlugin } from '@module-federation/enhanced'
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
+import commonConfig from './webpack.common';
 
 interface ProdConfigProps {
   moduleFederation: InstanceType<typeof ModuleFederationPlugin>;
@@ -11,7 +12,7 @@ interface ProdConfigProps {
   alias?: Record<string, string>;
 }
 
-const prodConfig = ({ moduleFederation, publicPath, envs }: ProdConfigProps) => ({
+const prodConfig = ({ moduleFederation, publicPath, envs, name }: ProdConfigProps) => ({
   mode: 'production',
   output: {
     filename: '[name].[contenthash].js',
@@ -22,6 +23,11 @@ const prodConfig = ({ moduleFederation, publicPath, envs }: ProdConfigProps) => 
       'process.env': JSON.stringify(envs),
     }),
     moduleFederation,
+    sentryWebpackPlugin({
+      org: 'blu-ip-ltda',
+      project: `$mfe-${name}`,
+      authToken: envs.MFE_SENTRY_AUTH_TOKEN,
+    }),
   ],
 });
 
