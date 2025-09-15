@@ -10,9 +10,10 @@ interface ProdConfigProps {
   publicPath: string;
   envs: Record<string, string>;
   alias?: Record<string, string>;
+  sentryProject: string;
 }
 
-const prodConfig = ({ moduleFederation, publicPath, envs, name }: ProdConfigProps) => ({
+const prodConfig = ({ moduleFederation, publicPath, envs, sentryProject }: ProdConfigProps) => ({
   mode: 'production',
   output: {
     filename: '[name].[contenthash].js',
@@ -25,14 +26,14 @@ const prodConfig = ({ moduleFederation, publicPath, envs, name }: ProdConfigProp
     moduleFederation,
     sentryWebpackPlugin({
       org: 'blu-ip-ltda',
-      project: `$mfe-${name}`,
+      project: sentryProject,
       authToken: envs.MFE_SENTRY_AUTH_TOKEN,
     }),
   ],
 });
 
-export default ({ moduleFederation, name, alias, publicPath, envs }: ProdConfigProps) => 
+export default ({ moduleFederation, name, alias, publicPath, envs, sentryProject }: ProdConfigProps) => 
   merge(
     commonConfig({ alias, name }) as any,
-    prodConfig({ moduleFederation, name, publicPath, envs }) as any
+    prodConfig({ moduleFederation, name, publicPath, envs, sentryProject }) as any
   );
