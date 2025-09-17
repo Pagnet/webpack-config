@@ -1,16 +1,14 @@
-import path from 'path';
-
 interface ModuleFederationProps {
   dev?: boolean;
 }
 
-export default ({ dev }: ModuleFederationProps) => ({
+export default ({}: ModuleFederationProps) => ({
   filename: 'remoteEntry.js',
-  dts: dev ? {
-    generateTypes: dev,
-    consumeTypes: dev,
-    tsConfigPath: path.resolve(__dirname, '../tsconfig.types.json'),
-  } : false,
+  dts: {
+    generateTypes: true,
+    consumeTypes: true,
+    tsConfigPath: './tsconfig.types.json',
+  },
   shared: {
     react: {
       requiredVersion: '18.2.0',
