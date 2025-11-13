@@ -28,23 +28,29 @@ export default ({ alias, name }: CommonConfigProps) => ({
         use: ["style-loader", "css-loader", "postcss-loader", "sass-loader"],
       },
       {
-        test: /\.(png|jpg|gif)$/,
-        use: ["file-loader"],
+        test: /\.(png|jpg|jpeg|gif|webp)$/i,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024 // 10kb
+          }
+        },
+        generator: {
+          filename: 'images/[name].[hash][ext]'
+        }
       },
       {
         test: /\.svg$/,
-        use: [
-          {
-            loader: "svg-url-loader",
-            options: {
-              limit: 10000,
-            },
-          },
-        ],
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024 // 10kb
+          }
+        }
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: ["file-loader"],
+        type: 'asset/resource'
       },
       {
         test: /.mdx$/,
@@ -53,7 +59,7 @@ export default ({ alias, name }: CommonConfigProps) => ({
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js", ".png"],
+    extensions: [".tsx", ".ts", ".js", ".png", ".webp"],
     alias,
   },
   plugins: [
