@@ -1,8 +1,10 @@
 import { merge } from 'webpack-merge';
 import { DefinePlugin } from 'webpack';
-import { ModuleFederationPlugin } from '@module-federation/enhanced'
-const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
+import CopyPlugin from 'copy-webpack-plugin';
+import { ModuleFederationPlugin } from '@module-federation/enhanced';
 import commonConfig from './webpack.common';
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 
 interface ProdConfigProps {
   moduleFederation: InstanceType<typeof ModuleFederationPlugin>;
@@ -24,6 +26,29 @@ const prodConfig = ({ moduleFederation, publicPath, envs, sentryProject }: ProdC
       'process.env': JSON.stringify(envs),
     }),
     moduleFederation,
+    new ImageMinimizerPlugin({
+      minimizer: {
+        implementation: ImageMinimizerPlugin.imageminMinify,
+        options: {
+          plugins: [
+            "imagemin-pngquant",
+            "imagemin-svgo",
+          ],
+        },
+      },
+      generator: [
+        {
+          preset: "webp",
+          implementation: ImageMinimizerPlugin.imageminGenerate,
+          options: {
+            plugins: ["imagemin-webp"],
+          },
+        },
+      ],
+    }),
+    new CopyPlugin({
+      patterns: [{ from: "src/assets/**/*.{png,svg}", noErrorOnMissing: true }],
+    }),
     sentryWebpackPlugin({
       org: 'blu-ip-ltda',
       project: sentryProject,
